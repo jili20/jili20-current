@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jili20.mapper.ArticleMapper">
+
+    <!-- 门户网站 - 首页 - 条件分页查询文章列表 -->
+    <select id="indexListPage" resultType="com.jili20.vo.api.ArticleIndexListVo">
+        SELECT a.id,
+               a.user_id        AS userId,
+               a.username,
+               a.master_url     AS masterUrl,
+               a.title,
+               a.avatar,
+               a.view_count     AS viewCount,
+               a.create_time    AS createTime,
+               c1.category_name AS categoryName,
+               c2.category_name AS categoryParentName,
+               c1.id            AS categoryId,
+               c2.id            AS categoryPid
+        FROM article a
+                 LEFT JOIN category c1 ON a.category_id = c1.id
+                 LEFT JOIN category c2 ON a.category_pid = c2.id
+            ${ew.customSqlSegment}
+    </select>
+
+
+    <!-- 门户网站 - 用户文章列表 - 根据用户ID条件分页查询文章列表 -->
+    <!-- 门户网站 - 私人空间 - 用户动态流（个人与关注人文章列表） -->
+    <select id="listPage" resultType="com.jili20.vo.api.ArticleListVo">
+        SELECT a.id,
+               a.user_id        AS userId,
+               a.username,
+               a.title,
+               a.avatar,
+               a.master_url     AS masterUrl,
+               a.view_count     AS viewCount,
+               a.create_time    AS createTime,
+               c1.category_name AS categoryName,
+               c2.category_name AS categoryParentName,
+               c1.id            AS categoryId,
+               c2.id            AS categoryPid
+        FROM article a
+                 LEFT JOIN category c1 ON a.category_id = c1.id
+                 LEFT JOIN category c2 ON a.category_pid = c2.id
+            ${ew.customSqlSegment}
+    </select>
+
+    <!-- 后台管理 - 文章管理 - 条件分页查询文章列表 -->
+    <select id="search" resultType="com.jili20.vo.admin.AdminArticleListVo">
+        select a.id,
+               a.user_id        AS userId,
+               a.username,
+               a.master_name    AS masterName,
+               a.title,
+               a.publish,
+               a.avatar,
+               a.master_url     AS masterUrl,
+               a.recommend,
+               a.view_count     AS viewCount,
+               a.create_time    AS createTime,
+               a.update_time    AS updateTime,
+               c1.category_name AS categoryName,
+               c2.category_name AS categoryParentName
+        FROM article a
+                 LEFT JOIN category c1 ON a.category_id = c1.id
+                 LEFT JOIN category c2 ON a.category_pid = c2.id
+            ${ew.customSqlSegment}
+    </select>
+
+
+    <!-- 后台管理 -文章管理 - 根据文章ID查看文章详情 -->
+    <select id="view" resultType="com.jili20.vo.admin.AuditArticleVo">
+        SELECT a.id,
+               a.user_id        AS userId,
+               a.username,
+               a.master_name    AS masterName,
+               a.title,
+               a.publish,
+               a.avatar,
+               a.master_url     AS masterUrl,
+               c1.category_name AS categoryName,
+               c2.category_name AS categoryParentName,
+               ac.content
+        FROM article a
+                 LEFT JOIN article_content ac ON a.id = ac.id
+                 LEFT JOIN category c1 ON a.category_id = c1.id
+                 LEFT JOIN category c2 ON a.category_pid = c2.id
+        WHERE a.id = #{articleId}
+    </select>
+
+    <!-- 后台管理 - 首页 - 统计近6个月发布的文章数 -->
+    <select id="selectMonthArticleTotal" resultType="java.util.Map">
+        SELECT `year_month`, `total`
+        FROM v_month_article_total
+    </select>
+
+
+    <!-- 后台管理 - 首页 - 统计各分类下的文章数 - 显示一级分类名 -->
+    <select id="selectCategoryTotal" resultType="java.util.Map">
+        SELECT `name`, `value`
+        FROM v_category_total
+    </select>
+
+
+    <!-- 门户网站 - 私人空间-草稿列表 - 根据用户ID分页查询草稿文章列表 -->
+    <select id="listPageDraft" resultType="com.jili20.vo.user.UserDraftArticleListVo">
+        SELECT a.id,
+               a.user_id        AS userId,
+               a.username,
+               a.title,
+               a.publish,
+               a.create_time    AS createTime,
+               c1.category_name AS categoryName,
+               c2.category_name AS categoryParentName,
+               c1.id            AS categoryId,
+               c2.id            AS categoryPid
+        FROM article a
+                 LEFT JOIN category c1 ON a.category_id = c1.id
+                 LEFT JOIN category c2 ON a.category_pid = c2.id
+            ${ew.customSqlSegment}
+    </select>
+
+
+    <!-- 把门户网站首页文章列表存入ES - 供搜索 -->
+    <select id="selectArticleListToEs" resultType="com.jili20.vo.api.EsArticleVo">
+        SELECT a.id,
+               a.user_id        AS userId,
+               a.title,
+               a.master_url,
+               a.create_time    AS createTime,
+               c1.category_name AS categoryName,
+               c2.category_name AS categoryParentName,
+               c1.id            AS categoryId,
+               c2.id            AS categoryPid
+        FROM article a
+                 LEFT JOIN category c1 ON a.category_id = c1.id
+                 LEFT JOIN category c2 ON a.category_pid = c2.id
+        WHERE a.publish = 1
+    </select>
+
+
+</mapper>

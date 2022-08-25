@@ -1,0 +1,50 @@
+#server:
+#  port: 9000
+#  servlet:
+#    context-path: /system
+#
+#spring:
+#  application:
+#    name: jili20-system
+#
+#  # 环境标识: dev 、 test、 prod( 不用修改,在 Dockerfile 中动态配置)
+#  profiles:
+#    active: dev
+#
+#  main:
+#    # 允许存在多个 Feign 调用相同 Service 的接口
+#    allow-bean-definition-overriding: true
+#
+#  cloud:
+#    nacos:
+#      server-addr: 127.0.0.1:8848
+#    # 负载均衡器缓存，解决启动项目中的警告
+#    loadbalancer:
+#      cache:
+#        enabled: false
+#
+#  datasource:
+#    url: jdbc:mysql://127.0.0.1:3306/jili20?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8&allowMultiQueries=true
+#    username: root
+#    password: Bing_yu2001
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#
+#  redis:
+#    host: 127.0.0.1
+#    port: 6379
+#    database: 0
+#    password:
+#    timeout: 3000ms #最大等待时间，超时则抛出异常，否则请求一直等待
+#
+#  jackson:
+#    date-format: yyyy年MM月dd日
+#
+#mybatis-plus:
+#  type-aliases-package: com.jili20.entity
+#  mapper-locations: classpath*:com/jili20/mapper/**/*.xml
+#
+#
+## 日志级别，会打印sql语句
+#logging:
+#  level:
+#    com.jili20.mapper: debug

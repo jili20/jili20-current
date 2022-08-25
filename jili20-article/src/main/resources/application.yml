@@ -1,0 +1,84 @@
+server:
+  port: 8000
+  servlet:
+    context-path: /article
+
+spring:
+  application:
+    name: jili20-article
+  # 环境标识: dev 、 test、 prod( 不用修改,在 Dockerfile 中动态配置) develop
+
+  profiles:
+    active: dev
+
+
+  elasticsearch:
+    rest:
+      uris: http://192.168.159.129:9200
+
+  main:
+    # 允许存在多个 Feign 调用相同 Service 的接口
+    allow-bean-definition-overriding: true
+
+  cloud:
+    nacos:
+      server-addr: 127.0.0.1:8848
+    # 负载均衡器缓存，解决启动项目中的警告
+    loadbalancer:
+      cache:
+        enabled: false
+
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/jili20?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8&allowMultiQueries=true
+    username: root
+    password: Bing_yu2001
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  # 最大上传单个文件大小：默认1M
+  # 最大总上传的数据大小:默认10M(对同时上传多个文件大小的限制）
+  servlet:
+    multipart:
+      max-file-size: 2MB
+      max-request-size: 2MB
+
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    database: 0
+    password:
+    timeout: 3000ms #最大等待时间，超时则抛出异常，否则请求一直等待
+
+  jackson:
+    date-format: yyyy年MM月dd日
+
+  # 缓存分类
+  cache:
+    type: redis
+    redis:
+      # 缓存 1 个小时
+      time-to-live: 3600000
+      # time-to-live: 60000 缓存 1 分钟
+      use-key-prefix: true
+      cache-null-values: true
+
+mybatis-plus:
+  type-aliases-package: com.jili20.entity
+  mapper-locations: classpath*:com/jili20/mapper/**/*.xml
+
+# 日志级别，会打印sql语句
+logging:
+  level:
+    com.jili20.mapper: debug
+
+# 阿里云文件上传(以下账号仅有权操作 OSS 对象存储)
+jili20:
+  oss:
+    # 阿里云配置 以下账号仅有权操作 OSS 对象存储
+    aliyun:
+      # 要带上 https:// ,上传时要使用的
+      endpoint:
+      accessKeyId:  # 根据自己的帐号配置
+      accessKeySecret:  # 根据自己的帐号配置
+      bucketName:  # 存储空间名称
+      # Bucket域名，访问文件时作为URL前缀，注意要加上 https:// 和 结尾带上 /
+      bucketDomain:

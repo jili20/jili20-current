@@ -1,0 +1,69 @@
+#server:
+#  port: 6000
+#
+#spring:
+#  # 环境标识: dev 、 test、 prod( 不用修改,在 Dockerfile 中动态配置)
+#  profiles:
+#    active: dev
+#  application:
+#    name: jili20-gateway
+#
+#  redis:
+#    host: 127.0.0.1
+#    port: 6379
+#    database: 0
+#    password:
+#    # 最大等待时间，超时则抛出异常，否则请求一直等待
+#    timeout: 3000ms
+#
+#  cloud:
+#    nacos:
+#      discovery:
+#        server-addr: 127.0.0.1:8848
+#
+#    # 负载均衡器缓存
+#    loadbalancer:
+#      cache:
+#        enabled: true
+#        caffeine:
+#          spec: initialCapacity=500,expireAfterWrite=5s
+#
+#    gateway:
+#      discovery:
+#        locator:
+#          enabled: false
+#          # 将请求路径上的服务名配置为小写
+#          lowerCaseServiceId: true
+#
+#      # 配置根据微服名代理转发
+#      routes:
+#        - id: jili20-system
+#          uri: lb://jili20-system
+#          predicates:
+#            - Path=/system/**
+#          filters:
+#            # 开启限流
+#            - name: RequestRateLimiter
+#              args:
+#                # 限制过滤器 bean名称
+#                key-resolver: '#{@uriKeyResolver}'
+#                # 希望每个用户每秒执行多少个请求。令牌桶填充的速率
+#                redis-rate-limiter.replenishRate: 2
+#                # 允许用户在一秒种内完成最大请求数。令牌桶最多可以容纳的令牌数量 。如果设置为0将阻止所有请求
+#                redis-rate-limiter.burstCapacity: 4
+#
+#        # 配置根据微服名代理转发
+#        - id: jili20-article
+#          uri: lb://jili20-article
+#          predicates:
+#            - Path=/article/**
+#          filters:
+#            # 开启限流
+#            - name: RequestRateLimiter
+#              args:
+#                # 限制过滤器 bean名称
+#                key-resolver: '#{@uriKeyResolver}'
+#                # 希望每个用户每秒执行多少个请求。令牌桶填充的速率
+#                redis-rate-limiter.replenishRate: 2
+#                # 允许用户在一秒种内完成最大请求数。令牌桶最多可以容纳的令牌数量 。如果设置为0将阻止所有请求
+#                redis-rate-limiter.burstCapacity: 4

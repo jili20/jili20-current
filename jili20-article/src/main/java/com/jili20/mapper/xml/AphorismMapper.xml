@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jili20.mapper.AphorismMapper">
+
+    <!-- 门户网站 - 首页 - 随机获取1条随机诗语 -->
+    <select id="getRandomTip" resultType="com.jili20.entity.Aphorism">
+        SELECT content, author
+        FROM aphorism
+        ORDER BY rand() limit 1
+    </select>
+
+</mapper>
